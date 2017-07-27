@@ -12,8 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    private int indexSingleChoice = 0;
+    private boolean[] indexMultiChoiceSelected = { false, false, false, false, false, false };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,94 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         System.out.println( "------>예:" + which );
+                    }
+                }).
+                show();
+    }
+
+    public void dialogProgress( View view ) {
+        ProgressDialog pd = new ProgressDialog( this );
+        pd.setTitle( "진행중..." );
+        pd.setIcon( android.R.drawable.ic_menu_upload );
+        pd.setMessage( "잠시만 기다려 주세요." );
+        pd.show();
+    }
+
+    public void dialogList( View view ) {
+        new AlertDialog.Builder( this ).
+                setTitle( "list dialog" ).
+                setIcon( android.R.drawable.ic_dialog_alert ).
+                setItems(R.array.lists, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String[] items = getResources().getStringArray( R.array.lists );
+                        Toast.makeText(
+                                getApplication(),
+                                items[ which ] + " selected!",
+                                Toast.LENGTH_LONG).
+                                show();
+                    }
+                }).
+                setPositiveButton( "닫기", null ).
+                show();
+    }
+
+    public void dialogSingleChoice( View view ) {
+        new AlertDialog.Builder( this ).
+                setIcon( android.R.drawable.ic_dialog_alert ).
+                setTitle( "하나를 고르세요" ).
+                setSingleChoiceItems(
+                        R.array.lists,
+                        indexSingleChoice,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                indexSingleChoice = which;
+                            }
+                        }).
+                setPositiveButton( "닫기", null ).
+                show();
+    }
+
+    public void dialogMultipleChoice( View view ){
+        new AlertDialog.Builder( this ).
+                setIcon( android.R.drawable.ic_dialog_alert ).
+                setTitle( "여러 개를 고르세요" ).
+                setMultiChoiceItems(
+                        R.array.lists,
+                        indexMultiChoiceSelected,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                               indexMultiChoiceSelected[ which ] = isChecked;
+                            }
+                        }).
+                setPositiveButton( "닫기", null ).
+                show();
+    }
+
+    public void dialogCustomLayout( View view ) {
+        // layout inflation
+        LayoutInflater inflater = getLayoutInflater();
+        final View rootView =
+                inflater.inflate( R.layout.dialog_custom, null );
+
+        new AlertDialog.Builder( this ).
+                setIcon( android.R.drawable.ic_dialog_alert ).
+                setTitle( "커스텀 다이알로그" ).
+                //setView( R.layout.dialog_custom ). // API21 more
+                setView( rootView ).
+                setPositiveButton("닫기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       EditText et =
+                               (EditText)rootView.findViewById( R.id.password );
+                        String password = et.getText().toString();
+                        Toast.makeText(
+                                getApplication(),
+                                "password:" + password,
+                                Toast.LENGTH_LONG).
+                                show();
                     }
                 }).
                 show();

@@ -1,8 +1,8 @@
 <resources>
     <string-array name="lists">
         <item>IceCreamSandwich</item>
-        <item>Kikat</item>
         <item>JellyBean</item>
+        <item>Kikat</item>
         <item>LolliPop</item>
         <item>Marshmallow</item>
         <item>Nougat</item>
